@@ -5,6 +5,8 @@ from enum import Enum
 # Pydantic
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import EmailStr
+from pydantic.types import PaymentCardBrand, PaymentCardNumber
 
 # FastAPI
 from fastapi import FastAPI
@@ -27,26 +29,66 @@ class Person(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        title='Name',
+        description='The person first name'
     )
     last_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        title='Last name',
+        description='The person last name'
     )
     age: int = Field(
         ...,
         gt=0,
         le=120
     )
-    hair_color: Optional[HairColor] = Field(default=None)
-    is_married: Optional[bool] = Field(default=None)
+    email: EmailStr = Field(
+        ...,
+        title='Email',
+        description='This is the person email'
+    )
+    card_number: PaymentCardNumber = Field(
+        ...,
+        title='Card number',
+        description='The person card number'
+    )
+    hair_color: Optional[HairColor] = Field(
+        default=None,
+        title='Hair color',
+        description='The person hair color. Only five valid values'
+    )
+    is_married: Optional[bool] = Field(
+        default=None,
+        title='Marital status',
+        description='It returns if the person is married or not'
+    )
 
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        title='City',
+        description='The person city'
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        title='State',
+        description='The person state'
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        title='Country',
+        description='The person country'
+    )
 
 
 # Path operations

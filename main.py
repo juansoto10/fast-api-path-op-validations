@@ -66,6 +66,19 @@ class Person(BaseModel):
         description='It returns if the person is married or not'
     )
 
+    class Config:
+        schema_extra = {
+            'example': {
+                'first_name': 'Jeanne',
+                'last_name': 'Goursaud',
+                'age': 26,
+                'email': 'jeanneg@netflix.com',
+                'card_number': '5232449742219221',
+                'hair_color': 'blonde',
+                'is_married': False
+            }
+        }
+
 
 class Location(BaseModel):
     city: str = Field(
@@ -89,6 +102,15 @@ class Location(BaseModel):
         title='Country',
         description='The person country'
     )
+
+    class Config:
+        schema_extra = {
+            'example': {
+                'city': 'Frankfurt',
+                'state': 'Hesse',
+                'country': 'Germany'
+            }
+        }
 
 
 # Path operations
@@ -150,3 +172,5 @@ def update_person(
     results = person.dict()
     results.update(location.dict())
     return results
+
+# last git branch: models_validations

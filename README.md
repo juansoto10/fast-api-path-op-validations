@@ -75,3 +75,15 @@ FastAPI utiliza otros frameworks dentro de sí mismo para funcionar:
 ...
 
 11. Disfruta empezar a desarrollar tu proyecto.
+
+
+## Códigos de estado (Status codes)
+
+Son respuestas http que indican el estado de finalizacion de una solicitud especifica:
+
+- Respuestas informativas (100-199)
+- Respuestas Satisfactorias (200-299)
+- Redirecciones (300-399)
+- Errores de los clientes (400-499)
+- Errores de los servidores (500-599)
+- Mas información: [Mozilla - Status Codes](https://developer.mozilla.org/es/docs/Web/HTTP/Status 'Status Codes')

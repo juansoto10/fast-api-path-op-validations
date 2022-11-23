@@ -5,8 +5,8 @@ from enum import Enum
 # Pydantic
 from pydantic import BaseModel
 from pydantic import Field
-from pydantic import EmailStr
-from pydantic.types import PaymentCardBrand, PaymentCardNumber
+from pydantic import EmailStr, SecretStr
+from pydantic.types import PaymentCardNumber
 
 # FastAPI
 from fastapi import FastAPI
@@ -25,7 +25,7 @@ class HairColor(str, Enum):
     red = 'red'
 
 
-class Person(BaseModel):
+class BasePerson(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
@@ -50,11 +50,6 @@ class Person(BaseModel):
         title='Email',
         description='This is the person email'
     )
-    card_number: PaymentCardNumber = Field(
-        ...,
-        title='Card number',
-        description='The person card number'
-    )
     hair_color: Optional[HairColor] = Field(
         default=None,
         title='Hair color',
@@ -73,11 +68,42 @@ class Person(BaseModel):
                 'last_name': 'Goursaud',
                 'age': 26,
                 'email': 'jeanneg@netflix.com',
-                'card_number': '5232449742219221',
                 'hair_color': 'blonde',
                 'is_married': False
             }
         }
+
+
+class Person(BasePerson):
+    password: SecretStr = Field(
+        ...,
+        min_length=8,
+        title='Password',
+        description='The person password'
+    )
+    card_number: PaymentCardNumber = Field(
+        ...,
+        title='Card Number',
+        description='The person card number'
+    )
+
+    class Config:
+        schema_extra = {
+            'example': {
+                'first_name': 'Jeanne',
+                'last_name': 'Goursaud',
+                'age': 26,
+                'email': 'jeanneg@netflix.com',
+                'hair_color': 'blonde',
+                'is_married': False,
+                'card_number': '5232449742219221',
+                'password': 'avemariaomeñaño12'
+            }
+        }
+
+
+class PersonOut(BasePerson):
+    pass
 
 
 class Location(BaseModel):
@@ -120,7 +146,7 @@ def home():
 
 
 # Request and response body
-@app.post('/person/new')
+@app.post('/person/new', response_model=PersonOut)
 def create_person(person: Person = Body(...)):
     return person
 

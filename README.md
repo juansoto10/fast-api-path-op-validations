@@ -92,3 +92,32 @@ Son respuestas http que indican el estado de finalizacion de una solicitud espec
 ## Trabajando con formularios en FastAPI
 
 `pip install python-multipart`
+
+
+## Tipos de entradas de datos en FastAPI:
+
+- Path Parameters -> URL y obligatorios
+
+- Query Parameters -> URL y opcionales
+
+- Request Body -> JSON
+
+- Formularios -> Campos en el frontend
+
+- Headers -> Cabeceras HTTP que pueden ser de cliente a servidor y viceversa
+
+- Cookies -> Almacenan información
+
+- Files -> Archivos como imágenes, audio, vídeo, etc.
+
+Para manejar archivos con FastAPI necesitamos de las clases ‘File’ y ‘Upload File’.
+
+Upload file tiene 3 parámetros:
+
+1. **Filename:** Nombre del archivo
+
+2. **Content_Type:** Tipo de archivo
+
+3. **File:** El archivo en sí mismo
+
+Para más información sobre archivos: [Documentación](https://fastapi.tiangolo.com/tutorial/request-files/ 'Files')

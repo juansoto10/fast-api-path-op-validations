@@ -153,9 +153,17 @@ class LoginOut(BaseModel):
 @app.get(
     path='/',
     status_code=status.HTTP_200_OK,
-    tags=['Home']
+    tags=['Home'],
+    summary='Home section'
 )
 def home():
+    """
+    ## Home
+
+    This path operation takes you to the home section.
+
+    Returns a JSON with the phrase "hello world".
+    """
     return {'Hello': 'World'}
 
 
@@ -164,9 +172,23 @@ def home():
     path='/person/new',
     response_model=PersonOut,
     status_code=status.HTTP_201_CREATED,
-    tags=['People']
+    tags=['People'],
+    summary='Create a person in the app'
 )
 def create_person(person: Person = Body(...)):
+    """
+    ## Create Person
+
+    This path operation creates a person in the app and saves the information in the database.
+
+    ### Parameters:
+
+    - Request body parameter:
+
+        - **person: Person** -> A person model with first name, last name, age, email, hair color, marital status, card number and password.
+
+    Returns a person model with first name, last name, age, email, hair color, marital status card number and password.
+    """
     return person
 
 
@@ -174,7 +196,8 @@ def create_person(person: Person = Body(...)):
 @app.get(
     path='/person/detail',
     status_code=status.HTTP_200_OK,
-    tags=['People']
+    tags=['People'],
+    summary='Show a person in the app'
 )
 def show_person(
     name: Optional[str] = Query(
@@ -192,6 +215,20 @@ def show_person(
         example=26
     )
 ):
+    """
+    ## Show Person
+
+    This path operation shows information from a person in the app.
+
+    ### Parameters:
+
+    - Query parameters:
+
+        - **name: str** -> A query parameter corresponding to the name of the person.
+        - **age: int** -> A query parameter corresponding to the age of the person.
+
+    Returns a JSON with the person's name and age.
+    """
     return {name: age}
 
 
@@ -203,7 +240,8 @@ people = [1, 2, 3, 4, 5]
 @app.get(
     path='/person/detail/{person_id}',
     status_code=status.HTTP_200_OK,
-    tags=['People']
+    tags=['People'],
+    summary='Show a person in the app'
 )
 def show_person(
     person_id: int = Path(
@@ -214,6 +252,21 @@ def show_person(
         example=4
     )
 ):
+    """
+    ## Show Person
+
+    This path operation shows information from a person in the app.
+
+    ### Parameters:
+
+    - Path parameters:
+
+        - **person_id: int** -> A path parameter corresponding to the person id.
+
+    Returns a JSON with the person id and a message if the person exists.
+
+    It raises an exception 404 if the person is not in the database.
+    """
     if person_id not in people:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -226,7 +279,8 @@ def show_person(
 @app.put(
     path='/person/{person_id}',
     status_code=status.HTTP_201_CREATED,
-    tags=['People']
+    tags=['People'],
+    summary='Update a person in the app'
 )
 def update_person(
     person_id: int = Path(
@@ -239,6 +293,24 @@ def update_person(
     person: Person = Body(...),
     location: Location = Body(...)
 ):
+    """
+    ## Update person
+
+    This path operation updates the information of a person in the app and saves it to the database.
+
+    ### Parameters:
+
+    - Path parameters:
+
+        - **person_id: int** -> A path parameter corresponding to the person id.
+
+    - Request body parameters:
+
+        - **person: Person** -> A person model with first name, last name, age, email, hair color, marital status, card number and password.
+        - **location: Location** -> A location model with city, state and country.
+
+    Returns a JSON with the models person and location combined.
+    """
     results = person.dict()
     results.update(location.dict())
     return results
@@ -248,9 +320,27 @@ def update_person(
     path='/login',
     response_model=LoginOut,
     status_code=status.HTTP_200_OK,
-    tags=['People']
+    tags=['People'],
+    summary='Login in to the app'
 )
-def login(username: str = Form(...), password: str = Form(...)):
+def login(
+        username: str = Form(...),
+        password: str = Form(...)
+):
+    """
+    ## Login
+
+    This path operation allows a person to log in to the app.
+
+    ### Parameters:
+
+    - Request body parameters:
+
+        - **username: str** -> A field of a form corresponding to the person's username.
+        - **password: str** -> A field of a form corresponding to the person's password.
+
+    Returns a login model with the person's username and a message.
+    """
     return LoginOut(username=username)
 
 
@@ -259,7 +349,8 @@ def login(username: str = Form(...), password: str = Form(...)):
 @app.post(
     path='/contact',
     status_code=status.HTTP_200_OK,
-    tags=['Contact']
+    tags=['Contact'],
+    summary='Contact the people who manage the API'
 )
 def contact(
     first_name: str = Form(
@@ -280,6 +371,24 @@ def contact(
     user_agent: Optional[str] = Header(default=None),
     ads: Optional[str] = Cookie(default=None)
 ):
+    """
+    ## Contact
+
+    This path operation allows a person to contact the people who manage the API.
+
+    ### Parameters:
+
+    - Request body parameters:
+
+        - **first_name: str** -> A field of a form corresponding to the person's first name.
+        - **last_name: str** -> A field of a form corresponding to the person's last name.
+        - **email: EmailStr** -> A field of a form corresponding to the person's email.
+        - **message: str** -> A field of a form corresponding to the message that the person send.
+        - **user_agent: str** -> Header with some information of the person.
+        - **ads: str** -> Cookies.
+
+    Returns user_agent Header.
+    """
     return user_agent
 
 
@@ -288,11 +397,25 @@ def contact(
 @app.post(
     path='/post-image',
     status_code=status.HTTP_201_CREATED,
-    tags=['Upload']
+    tags=['Upload'],
+    summary='Post an image in the app'
 )
 def post_image(
     image: UploadFile = File(...)
 ):
+    """
+    ## Post image
+
+    This path operation allows a person to post an image in the app.
+
+    ### Parameters:
+
+    - Request body parameters:
+
+        - **image: UploadFile** -> An image selected by the person that uses the app.
+
+    Returns a JSON with information about the uploaded image: Filename, Format and Size in KB.
+    """
     return {
         'Filename': image.filename,
         'Format': image.content_type,
